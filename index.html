@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRZ — Diagnóstico Estratégico</title>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '849671730467603');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=849671730467603&ev=PageView&noscript=1"/></noscript>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0A0A0A; color: #fff;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .container { width: 100%; max-width: 520px; }
+  .logo { text-align: center; margin-bottom: 32px; }
+  .logo-text { font-size: 28px; font-weight: 900; letter-spacing: 4px; color: #E8372C; }
+  .logo-sub { font-size: 11px; letter-spacing: 3px; color: #666; text-transform: uppercase; margin-top: 4px; }
+  .card { background: #141414; border: 1px solid #1e1e1e; border-radius: 16px; padding: 36px 32px; }
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-bar { height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #E8372C; border-radius: 2px; transition: width 0.4s ease; }
+  .progress-label { font-size: 11px; color: #555; text-align: right; margin-top: 8px; letter-spacing: 1px; }
+  .step { display: none; animation: fadeIn 0.35s ease; }
+  .step.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .step-question { font-size: 20px; font-weight: 700; line-height: 1.4; margin-bottom: 8px; }
+  .step-sub { font-size: 13px; color: #666; margin-bottom: 24px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+    background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s; font-size: 15px; color: #ccc;
+    text-align: left; width: 100%;
+  }
+  .option:hover, .option.selected { border-color: #E8372C; background: #1f1010; color: #fff; }
+  .option-icon { font-size: 20px; flex-shrink: 0; }
+  .field-input {
+    width: 100%; padding: 16px 18px; background: #1a1a1a;
+    border: 1.5px solid #2a2a2a; border-radius: 10px;
+    color: #fff; font-size: 16px; outline: none; transition: border-color 0.2s;
+  }
+  .field-input:focus { border-color: #E8372C; }
+  .field-input::placeholder { color: #444; }
+  .btn-next {
+    width: 100%; margin-top: 20px; padding: 17px;
+    background: #E8372C; color: #fff; font-size: 15px; font-weight: 700;
+    border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .screen-disq { display: none; text-align: center; }
+  .screen-disq.active { display: block; }
+  .screen-qual { display: none; text-align: center; }
+  .screen-qual.active { display: block; }
+  .screen-loading { display: none; text-align: center; padding: 20px 0; }
+  .screen-loading.active { display: block; }
+  .spinner {
+    width: 36px; height: 36px; border: 3px solid #2a2a2a;
+    border-top-color: #E8372C; border-radius: 50%;
+    animation: spin 0.7s linear infinite; margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .qual-badge {
+    display: inline-block; background: #E8372C; color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; text-transform: uppercase;
+  }
+  .qual-title { font-size: 24px; font-weight: 800; line-height: 1.35; margin-bottom: 12px; }
+  .qual-text { font-size: 14px; color: #888; line-height: 1.7; margin-bottom: 20px; }
+  .qual-items { text-align: left; background: #1a1a1a; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .qual-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #bbb; margin-bottom: 12px; line-height: 1.5; }
+  .qual-item:last-child { margin-bottom: 0; }
+  .qual-item-dot { width: 6px; height: 6px; background: #E8372C; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .btn-calendly {
+    display: block; width: 100%; padding: 18px; background: #E8372C; color: #fff;
+    font-size: 16px; font-weight: 800; border-radius: 10px; text-decoration: none;
+    text-align: center; transition: opacity 0.2s, transform 0.1s; margin-bottom: 12px;
+  }
+  .btn-calendly:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-note { font-size: 11px; color: #444; }
+  .footer { text-align: center; margin-top: 24px; font-size: 11px; color: #333; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <div class="logo-text">KRZ</div>
+    <div class="logo-sub">Método de Aquisição</div>
+  </div>
+  <div class="card">
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+      <div class="progress-label" id="progressLabel">ETAPA 1 DE 5</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step1">
+      <div class="step-question">Qual é o seu segmento principal nos EUA?</div>
+      <div class="step-sub">Selecione a opção que mais representa o seu negócio</div>
+      <div class="options">
+        <button class="option" onclick="selectOption(this,'step1')"><span class="option-icon">🏗️</span> Construção e reforma residencial</button>
+        <button class="option" onclick="selectOption(this,'step1')"><span class="option-icon">🏢</span> Construção comercial</button>
+        <button class="option" onclick="selectOption(this,'step1')"><span class="option-icon">🔧</span> Serviços especializados (elétrica, hidráulica, HVAC)</button>
+        <button class="option" onclick="selectOption(this,'step1')"><span class="option-icon">🏡</span> Paisagismo e áreas externas</button>
+        <button class="option" onclick="selectOption(this,'step1')"><span class="option-icon">📦</span> Outro segmento</button>
+      </div>
+      <button class="btn-next" id="next1" onclick="nextStep(1)" disabled>Continuar</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step2">
+      <div class="step-question">Qual foi o seu faturamento médio mensal nos últimos 3 meses?</div>
+      <div class="step-sub">Isso nos ajuda a entender onde você está agora</div>
+      <div class="options">
+        <button class="option" onclick="selectOption(this,'step2')" data-qualify="false"><span class="option-icon">📉</span> Menos de $3.000 / mês</button>
+        <button class="option" onclick="selectOption(this,'step2')" data-qualify="true"><span class="option-icon">📊</span> Entre $3.000 e $10.000 / mês</button>
+        <button class="option" onclick="selectOption(this,'step2')" data-qualify="true"><span class="option-icon">📈</span> Entre $10.000 e $30.000 / mês</button>
+        <button class="option" onclick="selectOption(this,'step2')" data-qualify="true"><span class="option-icon">🚀</span> Acima de $30.000 / mês</button>
+      </div>
+      <button class="btn-next" id="next2" onclick="nextStep(2)" disabled>Continuar</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step3">
+      <div class="step-question">Qual é o maior problema do seu negócio hoje?</div>
+      <div class="step-sub">Seja honesto — é o que vamos resolver juntos</div>
+      <div class="options">
+        <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">😰</span> Não sei de onde vem o próximo cliente</button>
+        <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">💸</span> Consigo clientes mas não consigo aumentar o preço</button>
+        <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">📵</span> Dependo 100% de indicação</button>
+        <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">🔄</span> Já tentei anunciar mas não funcionou</button>
+        <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">⏰</span> Não tenho tempo para fazer marketing</button>
+      </div>
+      <button class="btn-next" id="next3" onclick="nextStep(3)" disabled>Continuar</button>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step4">
+      <div class="step-question">Você já investiu em marketing ou tráfego pago antes?</div>
+      <div class="step-sub">Sem julgamentos — só precisamos entender seu histórico</div>
+      <div class="options">
+        <button class="option" onclick="selectOption(this,'step4')"><span class="option-icon">❌</span> Nunca investi em marketing pago</button>
+        <button class="option" onclick="selectOption(this,'step4')"><span class="option-icon">🤷</span> Tentei mas não tive resultado</button>
+        <button class="option" onclick="selectOption(this,'step4')"><span class="option-icon">✅</span> Invisto atualmente mas quero escalar</button>
+        <button class="option" onclick="selectOption(this,'step4')"><span class="option-icon">🔍</span> Estou pesquisando para começar agora</button>
+      </div>
+      <button class="btn-next" id="next4" onclick="nextStep(4)" disabled>Continuar</button>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step5">
+      <div class="step-question">Últimas informações para liberar seu diagnóstico</div>
+      <div class="step-sub">Usamos apenas para entrar em contato com você</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <input class="field-input" type="text" id="nameInput" placeholder="Seu nome completo" oninput="checkFields()" autocomplete="name"/>
+        <input class="field-input" type="tel" id="phoneInput" placeholder="WhatsApp (com DDD, ex: 11 99999-9999)" oninput="checkFields()" autocomplete="tel"/>
+        <input class="field-input" type="text" id="companyInput" placeholder="Nome da sua empresa" oninput="checkFields()" autocomplete="organization"/>
+      </div>
+      <button class="btn-next" id="next5" onclick="submitFunnel()" disabled>Ver meu resultado</button>
+    </div>
+
+    <!-- LOADING -->
+    <div class="screen-loading" id="screenLoading">
+      <div class="spinner"></div>
+      <div style="font-size:14px;color:#666;">Analisando seu perfil...</div>
+    </div>
+
+    <!-- DISQUALIFIED -->
+    <div class="screen-disq" id="screenDisq">
+      <div style="font-size:48px;margin-bottom:16px;">🎯</div>
+      <div style="font-size:20px;font-weight:700;margin-bottom:12px;">Ainda não é o momento certo</div>
+      <div style="font-size:14px;color:#666;line-height:1.7;">
+        O Diagnóstico Estratégico KRZ é focado em negócios que já têm operação consistente nos EUA.<br><br>
+        Quando você estiver faturando de forma previsível, volte aqui — vamos ter muito mais para trabalhar juntos.
+      </div>
+    </div>
+
+    <!-- QUALIFIED -->
+    <div class="screen-qual" id="screenQual">
+      <div class="qual-badge">✓ Perfil aprovado</div>
+      <div class="qual-title"><span id="userName" style="color:#E8372C;"></span>, você está<br>pronto para o próximo nível.</div>
+      <div class="qual-text">Seu perfil foi analisado e você se qualifica para o Diagnóstico Estratégico KRZ. Reserve os próximos 45 minutos — vamos montar um plano real para o seu negócio nos EUA.</div>
+      <div class="qual-items" style="margin-bottom:16px;">
+        <div style="font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">O que acontece na reunião</div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div>Análise do seu posicionamento atual no mercado americano</div></div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div>Identificação dos seus maiores gargalos de aquisição de clientes</div></div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div>Estratégia personalizada de crescimento com o Método KRZ</div></div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div>Sessão 100% focada no seu negócio — sem pitch genérico</div></div>
+      </div>
+      <div class="qual-items" style="margin-bottom:28px;">
+        <div style="font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Seus dados confirmados</div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div id="summaryName" style="color:#fff;font-weight:600;"></div></div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div id="summaryPhone" style="color:#aaa;"></div></div>
+        <div class="qual-item"><div class="qual-item-dot"></div><div id="summaryCompany" style="color:#aaa;"></div></div>
+      </div>
+      <a href="https://calendly.com/foguete-zmo" target="_blank" class="btn-calendly" onclick="trackCalendly()">Agendar meu Diagnóstico Estratégico</a>
+      <div class="btn-note">Vagas limitadas — agenda disponível apenas para perfis selecionados</div>
+    </div>
+  </div>
+  <div class="footer">KRZ &nbsp;|&nbsp; MÉTODO DE AQUISIÇÃO &nbsp;|&nbsp; USA</div>
+</div>
+
+<script>
+  var WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxKJJIueE8sl0d88Lg3xBMwy66zLwrq5pADEQz5qwUj-Y4QMImaLYmxVqB2ljB4Befuaw/exec';
+
+  var answers = {};
+  var qualified = true;
+
+  function selectOption(el, stepId) {
+    el.parentElement.querySelectorAll('.option').forEach(function(o){ o.classList.remove('selected'); });
+    el.classList.add('selected');
+    answers[stepId] = { text: el.innerText.trim(), qualify: el.getAttribute('data-qualify') };
+    document.getElementById(stepId.replace('step','next')).disabled = false;
+  }
+
+  function checkFields() {
+    var n = document.getElementById('nameInput').value.trim();
+    var p = document.getElementById('phoneInput').value.trim();
+    var c = document.getElementById('companyInput').value.trim();
+    document.getElementById('next5').disabled = !(n.length >= 2 && p.length >= 7 && c.length >= 2);
+  }
+
+  function nextStep(current) {
+    if (current === 2 && answers['step2'] && answers['step2'].qualify === 'false') qualified = false;
+    document.getElementById('step' + current).classList.remove('active');
+    var next = document.getElementById('step' + (current + 1));
+    if (next) next.classList.add('active');
+    var pct = Math.round(((current + 1) / 5) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = 'ETAPA ' + (current + 1) + ' DE 5';
+  }
+
+  function submitFunnel() {
+    var name    = document.getElementById('nameInput').value.trim();
+    var phone   = document.getElementById('phoneInput').value.trim();
+    var company = document.getElementById('companyInput').value.trim();
+
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('step5').classList.remove('active');
+    document.getElementById('screenLoading').classList.add('active');
+
+    var payload = {
+      name: name, phone: phone, company: company,
+      segmento:    answers['step1'] ? answers['step1'].text : '',
+      faturamento: answers['step2'] ? answers['step2'].text : '',
+      dor:         answers['step3'] ? answers['step3'].text : '',
+      marketing:   answers['step4'] ? answers['step4'].text : '',
+      qualified:   qualified,
+      timestamp:   new Date().toISOString()
+    };
+
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+
+    if (qualified && typeof fbq !== 'undefined') {
+      fbq('track', 'Lead', { content_name: 'Diagnostico Estrategico KRZ' });
+    }
+
+    setTimeout(function() {
+      document.getElementById('screenLoading').classList.remove('active');
+      if (!qualified) {
+        document.getElementById('screenDisq').classList.add('active');
+      } else {
+        document.getElementById('userName').textContent = name.split(' ')[0];
+        document.getElementById('summaryName').textContent = name;
+        document.getElementById('summaryPhone').textContent = phone;
+        document.getElementById('summaryCompany').textContent = company;
+        document.getElementById('screenQual').classList.add('active');
+      }
+    }, 1800);
+  }
+
+  function trackCalendly() {
+    if (typeof fbq !== 'undefined') fbq('track', 'Schedule');
+  }
+</script>
+</body>
+</html>
