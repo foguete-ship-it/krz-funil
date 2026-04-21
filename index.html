@@ -15,14 +15,14 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1068334137030523');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none"
+<noscript><img height="1" width="1" style="display:none
 src="https://www.facebook.com/tr?id=1068334137030523&ev=PageView&noscript=1"/></noscript>
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0A0A0A; color: #fff;
+    background: #0A0A0A; color: #fff
     min-height: 100vh; display: flex; flex-direction: column;
     align-items: center; justify-content: center; padding: 20px;
   }
@@ -146,7 +146,7 @@ src="https://www.facebook.com/tr?id=1068334137030523&ev=PageView&noscript=1"/></
         <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">🔄</span> Já tentei anunciar mas não funcionou</button>
         <button class="option" onclick="selectOption(this,'step3')"><span class="option-icon">⏰</span> Não tenho tempo para fazer marketing</button>
       </div>
-      <button class="btn-next" id="next3" onclick="nextStep(3)" disabled>Continuar</button>
+      <button class="btn-next" id="next3" onclick="nextStep(3)" disabled>Continuar</button
     </div>
 
     <!-- STEP 4 -->
@@ -168,7 +168,7 @@ src="https://www.facebook.com/tr?id=1068334137030523&ev=PageView&noscript=1"/></
       <div class="step-sub">Usamos apenas para entrar em contato com você</div>
       <div style="display:flex;flex-direction:column;gap:12px;">
         <input class="field-input" type="text" id="nameInput" placeholder="Seu nome completo" oninput="checkFields()" autocomplete="name"/>
-        <input class="field-input" type="tel" id="phoneInput" placeholder="WhatsApp (com DDD, ex: 11 99999-9999)" oninput="checkFields()" autocomplete="tel"/>
+        <input class="field-input" type="tel" id="phoneInput" placeholder="WhatsApp" oninput="checkFields()" autocomplete="tel"/>
         <input class="field-input" type="text" id="companyInput" placeholder="Nome da sua empresa" oninput="checkFields()" autocomplete="organization"/>
       </div>
       <button class="btn-next" id="next5" onclick="submitFunnel()" disabled>Ver meu resultado</button>
