@@ -221,6 +221,18 @@ src="https://www.facebook.com/tr?id=1068334137030523&ev=PageView&noscript=1"/></
   var answers = {};
   var qualified = true;
 
+  // Captura UTM parameters da URL
+  var utmParams = (function() {
+    var p = new URLSearchParams(window.location.search);
+    return {
+      source:   p.get('utm_source')   || '',
+      medium:   p.get('utm_medium')   || '',
+      campaign: p.get('utm_campaign') || '',
+      content:  p.get('utm_content')  || '',
+      term:     p.get('utm_term')     || ''
+    };
+  })();
+
   function selectOption(el, stepId) {
     el.parentElement.querySelectorAll('.option').forEach(function(o){ o.classList.remove('selected'); });
     el.classList.add('selected');
@@ -261,7 +273,12 @@ src="https://www.facebook.com/tr?id=1068334137030523&ev=PageView&noscript=1"/></
       dor:         answers['step3'] ? answers['step3'].text : '',
       marketing:   answers['step4'] ? answers['step4'].text : '',
       qualified:   qualified,
-      timestamp:   new Date().toISOString()
+      timestamp:   new Date().toISOString(),
+      utm_source:   utmParams.source,
+      utm_medium:   utmParams.medium,
+      utm_campaign: utmParams.campaign,
+      utm_content:  utmParams.content,
+      utm_term:     utmParams.term
     }
 
     fetch(WEBHOOK_URL, {
